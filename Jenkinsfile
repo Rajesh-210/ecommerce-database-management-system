@@ -3,7 +3,7 @@ pipeline {
   options { timestamps(); disableConcurrentBuilds() }
   environment {
     DOCKERHUB_USER = credentials('dockerhub-username')
-    APP_HOST = 'REPLACE_WITH_APP_EC2_PUBLIC_IP'
+    APP_HOST = '15.207.21.195'
     APP_USER = 'ubuntu'
     REMOTE_DIR = '/opt/edms'
   }
