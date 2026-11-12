@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EDMS | Commerce Control</title><link rel="stylesheet" href="/style.css"></head>
+<body><aside class="sidebar"><div class="brand">◈ EDMS</div><p class="muted">COMMERCE CONTROL</p>
+<nav><a class="active" href="#dashboard">▦ Overview</a><a href="#products">□ Products</a><a href="#customers">♙ Customers</a><a href="#orders">▤ Orders</a></nav>
+<div class="sidefoot">Database status <span id="dbstatus" class="status">Checking…</span></div></aside>
+<main><header><div><p class="eyebrow">WORKSPACE / OVERVIEW</p><h1>Commerce dashboard</h1><p class="muted">Monitor your store operations in one place.</p></div><button onclick="refresh()">↻ Refresh data</button></header>
+<section id="dashboard" class="stats">
+<div class="stat"><span>Total sales</span><strong id="sales">₹0</strong><small>All non-cancelled orders</small></div>
+<div class="stat"><span>Orders</span><strong id="ordersCount">0</strong><small>Orders placed</small></div>
+<div class="stat"><span>Customers</span><strong id="customersCount">0</strong><small>Registered customers</small></div>
+<div class="stat"><span>Products</span><strong id="productsCount">0</strong><small>Catalog items</small></div></section>
+<section class="panel"><div class="panelhead"><div><h2>Sales performance</h2><p class="muted">Monthly sales overview</p></div></div><div id="trend" class="trend">Sales data will appear here as orders are placed.</div></section>
+<section id="products" class="panel"><div class="panelhead"><div><h2>Product inventory</h2><p class="muted">Manage catalog and available stock</p></div><button onclick="showForm('product')">+ Add product</button></div>
+<div class="tablewrap"><table><thead><tr><th>Product</th><th>SKU</th><th>Category</th><th>Price</th><th>Stock</th><th>Action</th></tr></thead><tbody id="productRows"></tbody></table></div></section>
+<section id="customers" class="panel"><div class="panelhead"><div><h2>Customers</h2><p class="muted">Customer directory</p></div><button onclick="showForm('customer')">+ Add customer</button></div>
+<div class="tablewrap"><table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Country</th></tr></thead><tbody id="customerRows"></tbody></table></div></section>
+<section id="orders" class="panel"><div class="panelhead"><div><h2>Recent orders</h2><p class="muted">Order and payment activity</p></div><button onclick="showForm('order')">+ Create order</button></div>
+<div class="tablewrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Date</th><th>Status</th><th>Total</th></tr></thead><tbody id="orderRows"></tbody></table></div></section>
+<footer>EDMS · Learning project · Demo payments only</footer></main>
+<dialog id="modal"><form id="entryForm" method="dialog"><div class="modalhead"><h2 id="formTitle">Add record</h2><button class="close" type="button" onclick="modal.close()">✕</button></div><div id="fields"></div><div class="actions"><button type="button" class="secondary" onclick="modal.close()">Cancel</button><button type="submit">Save record</button></div></form></dialog>
+<div id="toast" role="status"></div><script src="/app.js"></script></body></html>

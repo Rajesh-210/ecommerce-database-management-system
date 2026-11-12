@@ -1,0 +1,62 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: edms-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+      MYSQL_DATABASE: ecommerce_db
+      MYSQL_USER: ${MYSQL_USER:-edms_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    networks: [edms]
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  backend:
+    image: ${BACKEND_IMAGE:-edms-backend:local}
+    build: ./backend
+    container_name: edms-backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: ecommerce_db
+      DB_USER: ${MYSQL_USER:-edms_user}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [edms]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    image: ${FRONTEND_IMAGE:-edms-frontend:local}
+    build: ./frontend
+    container_name: edms-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks: [edms]
+
+volumes:
+  mysql_data:
+    name: edms_mysql_data
+
+networks:
+  edms:
+    name: edms_network
