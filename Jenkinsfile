@@ -53,6 +53,9 @@ pipeline {
             ssh -o StrictHostKeyChecking=accept-new "$APP_USER@$APP_HOST" "sudo mkdir -p $REMOTE_DIR && sudo chown $APP_USER:$APP_USER $REMOTE_DIR"
             scp docker-compose.yml "$APP_USER@$APP_HOST:$REMOTE_DIR/"
             scp "$ENV_FILE" "$APP_USER@$APP_HOST:$REMOTE_DIR/.env"
+            ssh "$APP_USER@$APP_HOST" \
+                "sudo install -o $APP_USER -g $APP_USER -m 600 /tmp/edms.env $REMOTE_DIR/.env &&
+                 rm -f /tmp/edms.env"
             scp -r database "$APP_USER@$APP_HOST:$REMOTE_DIR/"
             ssh "$APP_USER@$APP_HOST" "cd $REMOTE_DIR && BACKEND_IMAGE=$DOCKERHUB_USER/edms-backend:$BUILD_NUMBER FRONTEND_IMAGE=$DOCKERHUB_USER/edms-frontend:$BUILD_NUMBER docker compose pull && BACKEND_IMAGE=$DOCKERHUB_USER/edms-backend:$BUILD_NUMBER FRONTEND_IMAGE=$DOCKERHUB_USER/edms-frontend:$BUILD_NUMBER docker compose up -d --remove-orphans"
             ssh "$APP_USER@$APP_HOST" "curl -fsS http://localhost/health"
