@@ -52,7 +52,7 @@ pipeline {
             set -eu
             ssh -o StrictHostKeyChecking=accept-new "$APP_USER@$APP_HOST" "sudo mkdir -p $REMOTE_DIR && sudo chown $APP_USER:$APP_USER $REMOTE_DIR"
             scp docker-compose.yml "$APP_USER@$APP_HOST:$REMOTE_DIR/"
-            scp "$ENV_FILE" "$APP_USER@$APP_HOST:/edms.env"
+            scp "$ENV_FILE" "$APP_USER@$APP_HOST:/tmp/edms.env"
             ssh "$APP_USER@$APP_HOST" \
                 "sudo install -o $APP_USER -g $APP_USER -m 600 /tmp/edms.env $REMOTE_DIR/.env &&
                  rm -f /tmp/edms.env"
