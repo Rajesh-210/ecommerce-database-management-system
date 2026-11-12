@@ -1,7 +1,7 @@
+name: edms
 services:
   db:
     image: mysql:8.0
-    container_name: edms-mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
@@ -22,7 +22,6 @@ services:
   backend:
     image: ${BACKEND_IMAGE:-edms-backend:local}
     build: ./backend
-    container_name: edms-backend
     restart: unless-stopped
     environment:
       DB_HOST: db
@@ -44,7 +43,6 @@ services:
   frontend:
     image: ${FRONTEND_IMAGE:-edms-frontend:local}
     build: ./frontend
-    container_name: edms-frontend
     restart: unless-stopped
     ports:
       - "80:80"
@@ -55,8 +53,10 @@ services:
 
 volumes:
   mysql_data:
+    external: true
     name: edms_mysql_data
 
 networks:
   edms:
+    external: true
     name: edms_network
